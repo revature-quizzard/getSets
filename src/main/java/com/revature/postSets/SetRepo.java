@@ -12,8 +12,10 @@ public class SetRepo {
     }
 
 
-    public void addSet(Set newSet){
-        dbReader.save(newSet);
+    public Set addSet(Set newSet){
+         dbReader.save(newSet);
+         System.out.println(newSet.getId());
+         return newSet;
     }
 
 

@@ -13,8 +13,6 @@ public class Tag {
 
 //    @DynamoDBHashKey
 
-
-
     @DynamoDBAttribute
     private String tag_name;
 
