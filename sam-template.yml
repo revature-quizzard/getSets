@@ -13,5 +13,6 @@ Resources:
       Timeout: 30
       Tracing: Active
       Policies:
-        - arn:aws:iam::188724803461:policy/dynamodb-readonly-persons
+        - arn:aws:iam::011217676466:role/QUIZZARD-DYNAMO-FULLACCESS
+
 
