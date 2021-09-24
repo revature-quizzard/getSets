@@ -5,8 +5,8 @@ Resources:
   GetBooksFx:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: target/Quizzard-getSets-1.0-SNAPSHOT.jar
-      Handler: com.revature.lambda.GetSetsHandler
+      CodeUri: target/post-sets-1.0-SNAPSHOT.jar
+      Handler: com.revature.post_sets.PostHandler
       Runtime: java8.al2
       Description: Java function
       MemorySize: 256
