@@ -15,7 +15,18 @@ public class TagRepo {
 
     public List<Tag> findTags(List<String> tag_names) {
 
-        List<Tag> tagsList = dbReader.batchLoad(tag_names).values().stream().map(e -> (Tag) e).collect(Collectors.toList());
+
+        System.out.println(tag_names);
+
+        List<Tag> tagQuery = tag_names.stream().map(e -> (new Tag(e))).collect(Collectors.toList());
+        Tag test = dbReader.load(tagQuery.get(0));
+
+        System.out.println("ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+        System.out.println(test.toString());
+
+        List<Tag> tagsList = dbReader.batchLoad(tagQuery).values().stream().map(e -> (Tag) e).collect(Collectors.toList());
+        System.out.println(tagsList);
+
         System.out.println("Tags List From Tag Repo : " + tagsList);
         return tagsList;
 
