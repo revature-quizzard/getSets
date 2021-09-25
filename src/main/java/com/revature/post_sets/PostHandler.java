@@ -31,10 +31,15 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
            we convert the Data by getting all Tags by name ,
            and return them in a list.
          */
-        List<Tag> trans_Tags = tagRepo.findTags(responeSet.getTags());
-        toSave.setTags(trans_Tags);
-        toSave.setCards(new ArrayList<Card>());
-        System.out.println( "Set From Request in Post Handler " + responeSet + " And Tag List " + trans_Tags);
+        try{
+            List<Tag> trans_Tags = tagRepo.findTags(responeSet.getTags());
+            toSave.setTags(trans_Tags);
+            toSave.setCards(new ArrayList<Card>());
+            System.out.println( "Set From Request in Post Handler " + responeSet + " And Tag List " + trans_Tags);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
         // setting response body to newly generated data
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
         responseEvent.setBody(mapper.toJson(setRepo.addSet(toSave)));
