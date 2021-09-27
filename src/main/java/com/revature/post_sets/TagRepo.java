@@ -18,7 +18,7 @@ public class TagRepo {
 
         System.out.println(tag_names);
 
-        List<Tag> tagQuery = tag_names.stream().map(Tag::new).collect(Collectors.toList());
+        List<Tag> tagQuery = tag_names.stream().map(e -> (new Tag(e))).collect(Collectors.toList());
         Tag test = dbReader.load(tagQuery.get(0));
 
         System.out.println("ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
