@@ -1,6 +1,7 @@
 package com.revature.post_sets;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
@@ -18,21 +19,28 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-
-        //getting data from request body
-        SetDto responeSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
-        // generating Set with Dto fields
         Set toSave = new Set();
-        toSave.setName(responeSet.getName());
-        toSave.setAuthor(responeSet.getAuthor());
-        toSave.set_public(responeSet.is_public());
+        LambdaLogger logger = context.getLogger();
+        logger.log("RECEIVED EVENT: " + requestEvent);
+
+        try{
+            //getting data from request body
+
+            SetDto responeSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
+            // generating Set with Dto fields
+
+            toSave.setName(responeSet.getName());
+            toSave.setAuthor(responeSet.getAuthor());
+            toSave.set_public(responeSet.is_public());
         /*
            since our api holds Tags as Strings for the SetDto,
            we convert the Data by getting all Tags by name ,
            and return them in a list.
          */
-        try{
+
             List<Tag> trans_Tags = tagRepo.findTags(responeSet.getTags());
+            logger.log("TAGS: " + trans_Tags);
+
             toSave.setTags(trans_Tags);
             toSave.setCards(new ArrayList<Card>());
             System.out.println( "Set From Request in Post Handler " + responeSet + " And Tag List " + trans_Tags);

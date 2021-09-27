@@ -5,7 +5,7 @@ Resources:
   GetBooksFx:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: target/post-sets-1.0-SNAPSHOT.jar
+      CodeUri: target/post-set-1.0-SNAPSHOT.jar
       Handler: com.revature.post_sets.PostHandler
       Runtime: java8.al2
       Description: Java function
