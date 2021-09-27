@@ -10,7 +10,7 @@ phases:
       - mvn package
       - sam package
         --template-file sam-template.yml
-        --s3-bucket qwizzard-api-bucket
+        --s3-bucket post-set-fx-bucket
         --output-template-file packaged-template.yml
 
 artifacts:
