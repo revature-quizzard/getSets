@@ -26,24 +26,23 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         try{
             //getting data from request body
 
-            SetDto responeSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
+            SetDto responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
             // generating Set with Dto fields
 
-            toSave.setName(responeSet.getName());
-            toSave.setAuthor(responeSet.getAuthor());
-            toSave.set_public(responeSet.is_public());
+            toSave.setName(responseSet.getName());
+            toSave.setAuthor(responseSet.getAuthor());
+            toSave.set_public(responseSet.is_public());
         /*
            since our api holds Tags as Strings for the SetDto,
            we convert the Data by getting all Tags by name ,
            and return them in a list.
          */
 
-            List<Tag> trans_Tags = tagRepo.findTags(responeSet.getTags());
+            List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
             logger.log("TAGS: " + trans_Tags);
 
             toSave.setTags(trans_Tags);
             toSave.setCards(new ArrayList<Card>());
-            System.out.println( "Set From Request in Post Handler " + responeSet + " And Tag List " + trans_Tags);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
