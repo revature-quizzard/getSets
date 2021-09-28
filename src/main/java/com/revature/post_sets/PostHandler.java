@@ -7,17 +7,29 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.revature.dtos.SetDto;
+import com.revature.documents.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-    private static final TagRepo tagRepo =  new TagRepo();
-    private static final SetRepo setRepo =  new SetRepo();
-    private static final UserRepo userRepo =  new UserRepo();
+    private final TagRepo tagRepo;
+    private final SetRepo setRepo;
+    private final UserRepo userRepo;
 
     private static final Gson mapper = new GsonBuilder().setPrettyPrinting().create();
+
+    public PostHandler() {
+        this.tagRepo = new TagRepo();
+        this.setRepo = new SetRepo();
+        this.userRepo = new UserRepo();
+    }
+
+    public PostHandler(TagRepo tagRepo, SetRepo setRepo, UserRepo userRepo) {
+        this.tagRepo = tagRepo;
+        this.setRepo = setRepo;
+        this.userRepo = userRepo;
+    }
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
@@ -49,7 +61,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         */
 
         List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
-        logger.log("TAGS: " + trans_Tags);
+        logger.log("TAGS: " + trans_Tags + "\n");
 
         toSave.setTags(trans_Tags);
         toSave.setCards(new ArrayList<Card>());
