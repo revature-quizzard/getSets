@@ -24,4 +24,16 @@ public class SetDto {
     @DynamoDBAttribute
     private boolean is_public;
 
+    @DynamoDBAttribute
+    private int views = 0;
+
+    @DynamoDBAttribute
+    private int plays = 0;
+
+    @DynamoDBAttribute
+    private int studies = 0;
+
+    @DynamoDBAttribute
+    private int favorites = 0;
+
 }

@@ -15,6 +15,8 @@ import java.util.List;
 public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     private static final TagRepo tagRepo =  new TagRepo();
     private static final SetRepo setRepo =  new SetRepo();
+    private static final UserRepo userRepo =  new UserRepo();
+
     private static final Gson mapper = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
@@ -23,33 +25,46 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         LambdaLogger logger = context.getLogger();
         logger.log("RECEIVED EVENT: " + requestEvent);
 
+        SetDto responseSet = null;
+
         try{
             //getting data from request body
-
-            SetDto responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
-            // generating Set with Dto fields
-
-            toSave.setName(responseSet.getName());
-            toSave.setAuthor(responseSet.getAuthor());
-            toSave.set_public(responseSet.is_public());
-        /*
-           since our api holds Tags as Strings for the SetDto,
-           we convert the Data by getting all Tags by name ,
-           and return them in a list.
-         */
-
-            List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
-            logger.log("TAGS: " + trans_Tags);
-
-            toSave.setTags(trans_Tags);
-            toSave.setCards(new ArrayList<Card>());
+            responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
 
+        //Get the author user, if the author doesn't exist, throw an exception
+        User author = userRepo.getUser(responseSet.getAuthor());
+
+        // generating Set with Dto fields
+        toSave.setName(responseSet.getName());
+        toSave.setAuthor(responseSet.getAuthor());
+        toSave.set_public(responseSet.is_public());
+
+        /*
+            since our api holds Tags as Strings for the SetDto,
+            we convert the Data by getting all Tags by name ,
+            and return them in a list.
+        */
+
+        List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
+        logger.log("TAGS: " + trans_Tags);
+
+        toSave.setTags(trans_Tags);
+        toSave.setCards(new ArrayList<Card>());
+
         // setting response body to newly generated data
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
-        responseEvent.setBody(mapper.toJson(setRepo.addSet(toSave)));
+
+        //Save the set to the setRepo and get the id back
+        toSave = setRepo.addSet(toSave);
+
+        //Save the set to the userRepo with the correct id
+        userRepo.addSet(toSave, author);
+
+        //All data is saved properly, return the set in the response body
+        responseEvent.setBody(mapper.toJson(toSave));
         return responseEvent;
     }
 }
