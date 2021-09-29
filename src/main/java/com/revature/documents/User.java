@@ -5,6 +5,7 @@ import lombok.Data;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class User {
     private int losses;
     private String registration_date;
     private List<String> gameRecords;
-    private List<UserSetDoc> created_sets;
-    private List<UserSetDoc> favorite_sets;
+    private List<UserSetDoc> created_sets = new ArrayList<>();
+    private List<UserSetDoc> favorite_sets = new ArrayList<>();
 
     @DynamoDbPartitionKey
     public String getId() {
@@ -109,7 +110,7 @@ public class User {
     @DynamoDbBean
     public static class UserSetDoc{
         private String id;
-        private String name;
+        private String set_name;
         private List<Tag> tags;
         private String author;
         private boolean is_public;
@@ -120,7 +121,7 @@ public class User {
 
         public UserSetDoc(Set set) {
             id = set.getId();
-            name = set.getName();
+            set_name = set.getSet_name();
             tags = set.getTags();
             author = set.getAuthor();
             is_public = set.is_public();

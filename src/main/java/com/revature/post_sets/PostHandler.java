@@ -50,7 +50,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         User author = userRepo.getUser(responseSet.getAuthor());
 
         // generating Set with Dto fields
-        toSave.setName(responseSet.getName());
+        toSave.setSet_name(responseSet.getName());
         toSave.setAuthor(responseSet.getAuthor());
         toSave.set_public(responseSet.is_public());
 

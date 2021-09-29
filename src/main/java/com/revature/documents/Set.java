@@ -2,7 +2,6 @@ package com.revature.documents;
 
 import lombok.Builder;
 import lombok.Data;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public class Set {
 
     private String id;
-    private String name;
+    private String set_name;
     private List<Tag> tags;
     private List<Card> cards;
     private String author;
@@ -33,16 +32,14 @@ public class Set {
         this.id = id;
     }
 
-    @DynamoDbAttribute("name")
-    public String getName() {
-        return name;
+    public String getSet_name() {
+        return set_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSet_name(String set_name) {
+        this.set_name = set_name;
     }
 
-    @DynamoDbAttribute("tags")
     public List<Tag> getTags() {
         return tags;
     }
@@ -51,7 +48,6 @@ public class Set {
         this.tags = tags;
     }
 
-    @DynamoDbAttribute("cards")
     public List<Card> getCards() {
         return cards;
     }
@@ -60,7 +56,6 @@ public class Set {
         this.cards = cards;
     }
 
-    @DynamoDbAttribute("author")
     public String getAuthor() {
         return author;
     }
@@ -69,7 +64,6 @@ public class Set {
         this.author = author;
     }
 
-    @DynamoDbAttribute("is_public")
     public boolean is_public() {
         return is_public;
     }
@@ -78,7 +72,6 @@ public class Set {
         this.is_public = is_public;
     }
 
-    @DynamoDbAttribute("views")
     public int getViews() {
         return views;
     }
@@ -87,7 +80,6 @@ public class Set {
         this.views = views;
     }
 
-    @DynamoDbAttribute("plays")
     public int getPlays() {
         return plays;
     }
@@ -96,7 +88,6 @@ public class Set {
         this.plays = plays;
     }
 
-    @DynamoDbAttribute("studies")
     public int getStudies() {
         return studies;
     }
@@ -105,7 +96,6 @@ public class Set {
         this.studies = studies;
     }
 
-    @DynamoDbAttribute("favorites")
     public int getFavorites() {
         return favorites;
     }

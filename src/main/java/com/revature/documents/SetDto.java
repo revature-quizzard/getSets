@@ -5,17 +5,17 @@ import java.util.List;
 //This class represents the fields of a Set that we expect to receive in a POST call
 public class SetDto {
 
-    private String name;
+    private String set_name;
     private List<String> tags;
     private String author;
     private boolean is_public;
 
     public String getName() {
-        return name;
+        return set_name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.set_name = name;
     }
 
     public List<String> getTags() {
