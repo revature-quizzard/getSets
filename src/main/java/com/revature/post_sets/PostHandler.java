@@ -81,6 +81,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
             return responseEvent;
         } catch (Exception e) {
             //Unexpected Server Error
+            System.out.println(e);
             responseEvent.setStatusCode(500);
             return responseEvent;
         }

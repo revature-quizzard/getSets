@@ -39,9 +39,6 @@ public class UserRepo {
 
 
     public User addSet(Set newSet, User user){
-        System.out.println(" ");
-        System.out.println(newSet);
-        System.out.println(user);
         //Create a UserSetDoc with correct Set data
         User.UserSetDoc doc = new User.UserSetDoc(newSet);
 
@@ -59,7 +56,6 @@ public class UserRepo {
         //Save user with updated fields to db
         user = userTable.updateItem(user);
 
-        System.out.println(user);
         return user;
     }
 }
