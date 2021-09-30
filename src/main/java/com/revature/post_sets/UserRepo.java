@@ -32,7 +32,7 @@ public class UserRepo {
         Expression filter = Expression.builder().expression("#a = :b") .putExpressionName("#a", "username") .putExpressionValue(":b", val).build();
         ScanEnhancedRequest request = ScanEnhancedRequest.builder().filterExpression(filter).build();
 
-        User user = userTable.scan(request).stream().findFirst().orElseThrow(ResourceNotFoundException::new).items().get(0);
+        User user = userTable.scan(request).items().stream().findFirst().orElseThrow(ResourceNotFoundException::new);
         System.out.println("USER WITH ID: " + user);
         return user;
     }

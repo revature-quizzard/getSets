@@ -8,6 +8,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.revature.documents.*;
+import com.revature.exceptions.ResourceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,45 +39,50 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         logger.log("RECEIVED EVENT: " + requestEvent);
 
         SetDto responseSet = null;
+        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
 
         try{
             //getting data from request body
             responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+
+            //Get the author user, if the author doesn't exist, throw an exception
+            User author = userRepo.getUser(responseSet.getAuthor());
+
+            // generating Set with Dto fields
+            toSave.setSet_name(responseSet.getName());
+            toSave.setAuthor(responseSet.getAuthor());
+            toSave.set_public(responseSet.is_public());
+
+            /*
+                since our api holds Tags as Strings for the SetDto,
+                we convert the Data by getting all Tags by name ,
+                and return them in a list.
+            */
+
+            List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
+            logger.log("TAGS: " + trans_Tags + "\n");
+
+            toSave.setTags(trans_Tags);
+            toSave.setCards(new ArrayList<Card>());
+
+
+            //Save the set to the setRepo and get the id back
+            toSave = setRepo.addSet(toSave);
+
+            //Save the set to the userRepo with the correct id
+            userRepo.addSet(toSave, author);
+
+            //All data is saved properly, return the set in the response body
+            responseEvent.setBody(mapper.toJson(toSave));
+            return responseEvent;
+        }catch (ResourceNotFoundException rnfe){
+            //Client Error
+            responseEvent.setStatusCode(400);
+            return responseEvent;
+        } catch (Exception e) {
+            //Unexpected Server Error
+            responseEvent.setStatusCode(500);
+            return responseEvent;
         }
-
-        //Get the author user, if the author doesn't exist, throw an exception
-        User author = userRepo.getUser(responseSet.getAuthor());
-
-        // generating Set with Dto fields
-        toSave.setSet_name(responseSet.getName());
-        toSave.setAuthor(responseSet.getAuthor());
-        toSave.set_public(responseSet.is_public());
-
-        /*
-            since our api holds Tags as Strings for the SetDto,
-            we convert the Data by getting all Tags by name ,
-            and return them in a list.
-        */
-
-        List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
-        logger.log("TAGS: " + trans_Tags + "\n");
-
-        toSave.setTags(trans_Tags);
-        toSave.setCards(new ArrayList<Card>());
-
-        // setting response body to newly generated data
-        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
-
-        //Save the set to the setRepo and get the id back
-        toSave = setRepo.addSet(toSave);
-
-        //Save the set to the userRepo with the correct id
-        userRepo.addSet(toSave, author);
-
-        //All data is saved properly, return the set in the response body
-        responseEvent.setBody(mapper.toJson(toSave));
-        return responseEvent;
     }
 }

@@ -2,6 +2,7 @@ package com.revature.documents;
 
 import lombok.Builder;
 import lombok.Data;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
@@ -64,6 +65,7 @@ public class Set {
         this.author = author;
     }
 
+    @DynamoDbAttribute("is_public")
     public boolean is_public() {
         return is_public;
     }
