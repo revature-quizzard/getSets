@@ -11,7 +11,9 @@ import com.revature.documents.*;
 import com.revature.exceptions.ResourceNotFoundException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     private final TagRepo tagRepo;
@@ -40,6 +42,10 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
 
         SetDto responseSet = null;
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,Authorization");
+        headers.put("Access-Control-Allow-Origin", "*");
+        responseEvent.setHeaders(headers);
 
         try{
             //getting data from request body
