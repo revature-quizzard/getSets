@@ -8,12 +8,10 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.revature.documents.*;
+import com.revature.documents.Set;
 import com.revature.exceptions.ResourceNotFoundException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     private final TagRepo tagRepo;
@@ -47,17 +45,33 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         headers.put("Access-Control-Allow-Origin", "*");
         responseEvent.setHeaders(headers);
 
+        User caller = null;
+        //Does this give a Username or Id?
+        try{
+            Object item = requestEvent.getRequestContext().getAuthorizer().get("claims");
+            LinkedHashMap casted = (LinkedHashMap) item;
+            String caller_id = (String) casted.get("sub");
+            caller = userRepo.getUserById(caller_id);
+        } catch(Exception e){
+            responseEvent.setStatusCode(401);
+            return responseEvent;
+        }
+
         try{
             //getting data from request body
             responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
 
             //Get the author user, if the author doesn't exist, throw an exception
             User author = userRepo.getUser(responseSet.getAuthor());
+            if(!author.equals(caller.getUsername())) {
+                responseEvent.setStatusCode(403);
+                return responseEvent;
+            }
 
             // generating Set with Dto fields
-            toSave.setSet_name(responseSet.getName());
+            toSave.setSetName(responseSet.getSetName());
             toSave.setAuthor(responseSet.getAuthor());
-            toSave.set_public(responseSet.is_public());
+            toSave.setPublic(responseSet.isPublic());
 
             /*
                 since our api holds Tags as Strings for the SetDto,

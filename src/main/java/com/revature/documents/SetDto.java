@@ -1,21 +1,23 @@
 package com.revature.documents;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
+
 import java.util.List;
 
 
 //This class represents the fields of a Set that we expect to receive in a POST call
 public class SetDto {
 
-    private String set_name;
+    private String setName;
     private List<String> tags;
     private String author;
-    private boolean is_public;
+    private boolean isPublic;
 
-    public String getName() {
-        return set_name;
+    public String getSetName() {
+        return setName;
     }
 
-    public void setName(String name) {
-        this.set_name = name;
+    public void setSetName(String setName) {
+        this.setName = setName;
     }
 
     public List<String> getTags() {
@@ -34,11 +36,12 @@ public class SetDto {
         this.author = author;
     }
 
-    public boolean is_public() {
-        return is_public;
+    @DynamoDbAttribute("isPublic")
+    public boolean isPublic() {
+        return isPublic;
     }
 
-    public void setIs_public(boolean is_public) {
-        this.is_public = is_public;
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 }

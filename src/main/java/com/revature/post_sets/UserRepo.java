@@ -37,21 +37,31 @@ public class UserRepo {
         return user;
     }
 
+    public User getUserById(String id){
+
+        AttributeValue val = AttributeValue.builder().s(id).build();
+        Expression filter = Expression.builder().expression("#a = :b") .putExpressionName("#a", "id") .putExpressionValue(":b", val).build();
+        ScanEnhancedRequest request = ScanEnhancedRequest.builder().filterExpression(filter).build();
+
+        return userTable.scan(request).stream().findFirst().orElseThrow(ResourceNotFoundException::new).items().get(0);
+
+    }
+
 
     public User addSet(Set newSet, User user){
         //Create a UserSetDoc with correct Set data
         User.UserSetDoc doc = new User.UserSetDoc(newSet);
 
-        if(user.getCreated_sets() == null) {
-            user.setCreated_sets(new ArrayList<User.UserSetDoc>());
+        if(user.getCreatedSets() == null) {
+            user.setCreatedSets(new ArrayList<User.UserSetDoc>());
         }
 
         //Create a copy of created_sets
-        List<User.UserSetDoc> temp = user.getCreated_sets();
+        List<User.UserSetDoc> temp = user.getCreatedSets();
         //Modify copy
         temp.add(doc);
         //Save copy
-        user.setCreated_sets(temp);
+        user.setCreatedSets(temp);
 
         //Save user with updated fields to db
         user = userTable.updateItem(user);
