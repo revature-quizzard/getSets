@@ -34,9 +34,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        Set toSave = new Set();
         LambdaLogger logger = context.getLogger();
-        logger.log("RECEIVED EVENT: " + requestEvent);
 
         SetDto responseSet = null;
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
@@ -46,6 +44,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         responseEvent.setHeaders(headers);
 
         User caller = null;
+        Set toSave = new Set();
         //Does this give a Username or Id?
         try{
             Object item = requestEvent.getRequestContext().getAuthorizer().get("claims");
@@ -63,6 +62,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
 
             //Get the author user, if the author doesn't exist, throw an exception
             User author = userRepo.getUser(responseSet.getAuthor());
+            System.out.println(author);
             if(!author.equals(caller.getUsername())) {
                 responseEvent.setStatusCode(403);
                 return responseEvent;
@@ -94,6 +94,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
 
             //All data is saved properly, return the set in the response body
             responseEvent.setBody(mapper.toJson(toSave));
+            responseEvent.setStatusCode(201);
             return responseEvent;
         }catch (ResourceNotFoundException rnfe){
             //Client Error
