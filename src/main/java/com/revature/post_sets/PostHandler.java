@@ -59,6 +59,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         try{
             //getting data from request body
             responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
+            System.out.println("HERE!!!!");
 
             //Get the author user, if the author doesn't exist, throw an exception
             User author = userRepo.getUser(responseSet.getAuthor());
