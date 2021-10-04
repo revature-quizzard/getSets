@@ -33,7 +33,6 @@ public class UserRepo {
         ScanEnhancedRequest request = ScanEnhancedRequest.builder().filterExpression(filter).build();
 
         User user = userTable.scan(request).items().stream().findFirst().orElseThrow(ResourceNotFoundException::new);
-        System.out.println("USER WITH ID: " + user);
         return user;
     }
 
