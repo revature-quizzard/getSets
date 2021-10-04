@@ -22,11 +22,9 @@ public class SetRepo {
 
 
     public Set addSet(Set newSet){
-        System.out.println("newSet: " + newSet);
         UUID uuid = UUID.randomUUID();
         newSet.setId(uuid.toString());
         setTable.putItem(newSet);
-        System.out.println("SET WITH ID: " + newSet);
         return newSet;
     }
 

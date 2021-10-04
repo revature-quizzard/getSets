@@ -59,12 +59,10 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
         try{
             //getting data from request body
             responseSet = mapper.fromJson(requestEvent.getBody() , SetDto.class);
-            System.out.println("HERE!!!!");
 
             //Get the author user, if the author doesn't exist, throw an exception
             User author = userRepo.getUser(responseSet.getAuthor());
-            System.out.println(author);
-            if(!author.equals(caller.getUsername())) {
+            if(!author.getUsername().equals(caller.getUsername())) {
                 responseEvent.setStatusCode(403);
                 return responseEvent;
             }
@@ -81,7 +79,6 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
             */
 
             List<Tag> trans_Tags = tagRepo.findTags(responseSet.getTags());
-            logger.log("TAGS: " + trans_Tags + "\n");
 
             toSave.setTags(trans_Tags);
             toSave.setCards(new ArrayList<Card>());
