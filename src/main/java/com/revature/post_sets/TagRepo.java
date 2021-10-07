@@ -20,6 +20,11 @@ public class TagRepo {
         DynamoDbEnhancedClient dbClient = DynamoDbEnhancedClient.builder().dynamoDbClient(db).build();
         tagTable = dbClient.table("Tags", TableSchema.fromBean(Tag.class));
     }
+
+    public TagRepo(DynamoDbTable<Tag> tagTable) {
+        this.tagTable = tagTable;
+    }
+
     public List<Tag> findTags(List<String> tag_names) {
         List<Tag> tagQuery = tag_names.stream().map(e -> (new Tag(e))).collect(Collectors.toList());
         List<Tag> result = new ArrayList<>();
