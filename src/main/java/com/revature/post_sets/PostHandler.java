@@ -62,6 +62,7 @@ public class PostHandler implements RequestHandler<APIGatewayProxyRequestEvent, 
 
             //Get the author user, if the author doesn't exist, throw an exception
             User author = userRepo.getUser(responseSet.getAuthor());
+            System.out.println(author.getUsername());
             if(!author.getUsername().equals(caller.getUsername())) {
                 responseEvent.setStatusCode(403);
                 return responseEvent;
